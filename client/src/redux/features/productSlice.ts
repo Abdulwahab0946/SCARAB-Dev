@@ -179,6 +179,7 @@ const productSlice = createSlice({
 });
 
 // Selectors
+export const selectProductState = (state: RootState) => state.product;
 export const selectProducts = (state: RootState) => state.product.productList;
 export const selectProductStatus = (state: RootState) => state.product.status;
 export const selectProductError = (state: RootState) => state.product.error;

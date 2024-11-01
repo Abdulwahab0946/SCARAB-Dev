@@ -1,28 +1,34 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  navigationMenuTriggerStyle,
+} from "@comp/ui/navigation-menu";
 
 const Header: React.FC = () => {
   return (
-    <header className="bg-blue-600 text-white p-4">
-      <nav>
-        <ul className="flex space-x-4">
-          <li>
-            <Link to="/" className="hover:underline">
-              Home
+    <header className="bg-blue-600  p-4">
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <Link to="/">
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Products
+              </NavigationMenuLink>
             </Link>
-          </li>
-          <li>
-            <Link to="/add-product" className="hover:underline">
-              Add Product
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link to="/add-product">
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Add Product
+              </NavigationMenuLink>
             </Link>
-          </li>
-          <li>
-            <Link to="/products" className="hover:underline">
-              Product Listing
-            </Link>
-          </li>
-        </ul>
-      </nav>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
     </header>
   );
 };

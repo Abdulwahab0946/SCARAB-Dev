@@ -15,6 +15,7 @@ import {
   CardContent,
   CardFooter,
 } from "@comp/ui/card";
+import { Link } from "react-router-dom";
 
 const ProductListing: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -45,34 +46,40 @@ const ProductListing: React.FC = () => {
       <h2 className="text-2xl font-semibold mb-4">Our Product List</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {products.map((product) => (
-          <Card key={product.id}>
-            <CardHeader className=" flex flex-row items-center justify-between ">
-              <CardTitle>{product.name}</CardTitle>
-              <div>
-                <button
-                  onClick={() => handleEdit(product.id)}
-                  className="mr-2 text-blue-500 hover:underline"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(product.id)}
-                  className="text-red-500 hover:underline"
-                >
-                  Delete
-                </button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className=" line-clamp-3">
-                {product.description}
-              </CardDescription>
-            </CardContent>
-            <CardFooter className="flex flex-row justify-between items-center">
-              <p>${product.price}</p>
-              <p>Quantity: {product.quantity}</p>
-            </CardFooter>
-          </Card>
+          <Link
+            key={product.id}
+            to={`/product/${product.id}`}
+            className="text-blue-500 hover:underline"
+          >
+            <Card>
+              <CardHeader className=" flex flex-row items-center justify-between ">
+                <CardTitle>{product.name}</CardTitle>
+                <div>
+                  <button
+                    onClick={() => handleEdit(product.id)}
+                    className="mr-2 text-blue-500 hover:underline"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(product.id)}
+                    className="text-red-500 hover:underline"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className=" line-clamp-3">
+                  {product.description}
+                </CardDescription>
+              </CardContent>
+              <CardFooter className="flex flex-row justify-between items-center">
+                <p>${product.price}</p>
+                <p>Quantity: {product.quantity}</p>
+              </CardFooter>
+            </Card>
+          </Link>
         ))}
       </div>
     </div>
