@@ -1,43 +1,80 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Product } from "./../types";
+import React, { useEffect } from "react";
+import {
+  fetchProducts,
+  removeProduct,
+  selectProducts,
+  selectProductStatus,
+  selectProductError,
+} from "../redux/features/productSlice";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@comp/ui/card";
 
 const ProductListing: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
+  const products = useAppSelector(selectProducts);
+  const state = useAppSelector(selectProductStatus);
+  const error = useAppSelector(selectProductError);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/products");
-        setProducts(response.data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Something went wrong");
-      } finally {
-        setLoading(false);
-      }
-    };
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
-    fetchProducts();
-  }, []);
+  const handleDelete = (id: number) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      dispatch(removeProduct(id));
+    }
+  };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  const handleEdit = (id: number) => {
+    // Logic to edit the product, e.g., redirecting to an edit page or opening a modal
+    console.log("Edit product with ID:", id);
+  };
+
+  if (state === "loading") return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
-      <h2 className="text-2xl mb-4">Product Listing</h2>
-      <ul className="space-y-2">
+      <h2 className="text-2xl font-semibold mb-4">Our Product List</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {products.map((product) => (
-          <li key={product.id} className="border p-4 rounded">
-            <h3 className="text-xl">{product.name}</h3>
-            <p>{product.description}</p>
-            <p className="font-bold">${product.price}</p>
-            <p>Quantity: {product.quantity}</p>
-          </li>
+          <Card key={product.id}>
+            <CardHeader className=" flex flex-row items-center justify-between ">
+              <CardTitle>{product.name}</CardTitle>
+              <div>
+                <button
+                  onClick={() => handleEdit(product.id)}
+                  className="mr-2 text-blue-500 hover:underline"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(product.id)}
+                  className="text-red-500 hover:underline"
+                >
+                  Delete
+                </button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <CardDescription className=" line-clamp-3">
+                {product.description}
+              </CardDescription>
+            </CardContent>
+            <CardFooter className="flex flex-row justify-between items-center">
+              <p>${product.price}</p>
+              <p>Quantity: {product.quantity}</p>
+            </CardFooter>
+          </Card>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };

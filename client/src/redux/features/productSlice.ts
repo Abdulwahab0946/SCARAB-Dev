@@ -7,6 +7,8 @@ import {
   updateProduct,
   deleteProduct,
 } from "../../services/productService";
+import { RootState } from "../store";
+import { toast } from "@/hooks/use-toast";
 
 const initialState: ProductState = {
   productList: [],
@@ -15,53 +17,127 @@ const initialState: ProductState = {
   productData: null,
 };
 
+// Fetch all products
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
-    const response = await getProducts();
-    return response;
+    try {
+      const response = await getProducts();
+      return response.data;
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Failed to Fetch Products",
+        description:
+          // @ts-expect-error  TODO: fix later by adding
+          error.message || "An error occurred while fetching products.",
+      });
+      throw error;
+    }
   }
 );
 
+// Add a new product
 export const addProduct = createAsyncThunk(
   "products/addProduct",
   async (product: CreateProductDto) => {
-    const response = await createProduct(product);
-    return response;
+    try {
+      const response = await createProduct(product);
+      toast({
+        variant: "default",
+        title: "Product Added",
+        description: `${product.name} added successfully`,
+      });
+      return response.data;
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Failed to Add Product",
+        description:
+          // @ts-expect-error  TODO: fix later by adding
+          error.message || "An error occurred while adding the product.",
+      });
+      throw error;
+    }
   }
 );
 
+// Fetch product by ID
 export const fetchProductById = createAsyncThunk(
   "products/fetchProductById",
-  async (id: string) => {
-    const response = await getProductById(id);
-    return response;
+  async (id: number) => {
+    try {
+      const response = await getProductById(id);
+      return response.data;
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Failed to Fetch Product",
+        description:
+          // @ts-expect-error  TODO: fix later by adding
+          error.message || "An error occurred while fetching the product.",
+      });
+      throw error;
+    }
   }
 );
 
+// Edit an existing product
 export const editProduct = createAsyncThunk(
   "products/editProduct",
   async ({
     id,
     product,
   }: {
-    id: string;
+    id: number;
     product: Partial<CreateProductDto>;
   }) => {
-    const response = await updateProduct(id, product);
-    return response;
+    try {
+      const response = await updateProduct(id, product);
+      toast({
+        variant: "default",
+        title: "Product Updated",
+        description: `${product.name} updated successfully`,
+      });
+      return response.data;
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Failed to Edit Product",
+        description:
+          // @ts-expect-error  TODO: fix later by adding
+          error.message || "An error occurred while editing the product.",
+      });
+      throw error;
+    }
   }
 );
 
+// Remove a product
 export const removeProduct = createAsyncThunk(
   "products/removeProduct",
-  async (id: string) => {
-    await deleteProduct(id);
-    return id;
+  async (id: number) => {
+    try {
+      await deleteProduct(id);
+      toast({
+        variant: "default",
+        title: "Product Removed",
+        description: `Product with ID ${id} removed successfully`,
+      });
+      return id;
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Failed to Remove Product",
+        description:
+          // @ts-expect-error  TODO: fix later by adding
+          error.message || "An error occurred while removing the product.",
+      });
+      throw error;
+    }
   }
 );
 
-// Create the products slice
 const productSlice = createSlice({
   name: "products",
   initialState,
@@ -77,7 +153,7 @@ const productSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
-        state.status = "success";
+        state.status = "fail";
         state.error = action.error.message || "Failed to fetch products";
       })
       .addCase(addProduct.fulfilled, (state, action) => {
@@ -85,19 +161,26 @@ const productSlice = createSlice({
       })
       .addCase(removeProduct.fulfilled, (state, action) => {
         state.productList = state.productList.filter(
-          (product) => product.id !== parseInt(action.payload, 10)
+          (product) => product.id !== action.payload
+        ); // Remove the product from the list
+      })
+      .addCase(fetchProductById.fulfilled, (state, action) => {
+        state.productData = action.payload;
+      })
+      .addCase(editProduct.fulfilled, (state, action) => {
+        const index = state.productList.findIndex(
+          (product) => product.id === action.payload.id
         );
+        if (index !== -1) {
+          state.productList[index] = action.payload;
+        }
       });
   },
 });
 
-export const selectProducts = (state: { products: ProductState }) =>
-  state.products.productList;
-
-export const selectProductStatus = (state: { products: ProductState }) =>
-  state.products.status;
-
-export const selectProductError = (state: { products: ProductState }) =>
-  state.products.error;
+// Selectors
+export const selectProducts = (state: RootState) => state.product.productList;
+export const selectProductStatus = (state: RootState) => state.product.status;
+export const selectProductError = (state: RootState) => state.product.error;
 
 export default productSlice.reducer;

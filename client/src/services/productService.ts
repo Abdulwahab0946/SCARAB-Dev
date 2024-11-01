@@ -1,30 +1,15 @@
 import apiClient from "../api/apiClient";
-import { CreateProductDto } from "../types";
+import { CreateProductDto } from "@/types";
 
-export const createProduct = async (product: CreateProductDto) => {
-  const response = await apiClient.post("/products", product);
-  return response.data;
-};
+export const createProduct = (product: CreateProductDto) =>
+  apiClient.post("/products", product);
 
-export const getProducts = async () => {
-  const response = await apiClient.get("/products");
-  return response.data;
-};
+export const getProducts = () => apiClient.get("/products");
 
-export const getProductById = async (id: string) => {
-  const response = await apiClient.get(`/products/${id}`);
-  return response.data;
-};
+export const getProductById = (id: number) => apiClient.get(`/products/${id}`);
 
-export const updateProduct = async (
-  id: string,
-  product: Partial<CreateProductDto>
-) => {
-  const response = await apiClient.put(`/products/${id}`, product);
-  return response.data;
-};
+export const updateProduct = (id: number, product: Partial<CreateProductDto>) =>
+  apiClient.put(`/products/${id}`, product);
 
-export const deleteProduct = async (id: string) => {
-  const response = await apiClient.delete(`/products/${id}`);
-  return response.data;
-};
+export const deleteProduct = (id: number) =>
+  apiClient.delete(`/products/${id}`);
