@@ -5,6 +5,9 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DATABASE_HOST,
@@ -16,9 +19,6 @@ import { ConfigModule } from '@nestjs/config';
       synchronize: true, // TODO: Set to false in production
     }),
     ProductsModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
   ],
 })
 export class AppModule {}
