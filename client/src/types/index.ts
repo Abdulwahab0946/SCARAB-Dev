@@ -1,3 +1,5 @@
+import { ConfigState } from "./common";
+
 export interface Product {
   id: number;
   name: string;
@@ -12,3 +14,8 @@ export interface ReqConfig {
 }
 
 export type CreateProductDto = Omit<Product, "id">;
+
+export interface ProductState extends ConfigState {
+  productData: Product | null;
+  productList: Product[];
+}
