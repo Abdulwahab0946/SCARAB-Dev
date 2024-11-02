@@ -1,10 +1,4 @@
-import {
-  IsNotEmpty,
-  IsPositive,
-  IsDecimal,
-  IsString,
-  IsOptional,
-} from 'class-validator';
+import { IsNotEmpty, IsPositive, IsString, IsOptional } from 'class-validator';
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -12,7 +6,6 @@ export class CreateProductDto {
   name: string;
 
   @IsNotEmpty()
-  @IsDecimal()
   @IsPositive()
   price: number;
 
