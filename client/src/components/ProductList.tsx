@@ -16,6 +16,7 @@ import {
   CardFooter,
 } from "@comp/ui/card";
 import { Link } from "react-router-dom";
+import { Button } from "./ui/button";
 
 const ProductListing: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -49,24 +50,27 @@ const ProductListing: React.FC = () => {
           <Link
             key={product.id}
             to={`/product/${product.id}`}
-            className="text-blue-500 hover:underline"
+            className="hover:shadow-lg"
           >
             <Card>
-              <CardHeader className=" flex flex-row items-center justify-between ">
+              <CardHeader className=" flex flex-col md:flex-row items-center justify-between ">
                 <CardTitle>{product.name}</CardTitle>
+
                 <div>
-                  <button
+                  <Button
+                    variant="ghost"
                     onClick={() => handleEdit(product.id)}
                     className="mr-2 text-blue-500 hover:underline"
                   >
                     Edit
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="ghost"
                     onClick={() => handleDelete(product.id)}
-                    className="text-red-500 hover:underline"
+                    className="text-destructive hover:underline"
                   >
                     Delete
-                  </button>
+                  </Button>
                 </div>
               </CardHeader>
               <CardContent>

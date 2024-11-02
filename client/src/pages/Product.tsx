@@ -5,7 +5,7 @@ import {
   selectProductState,
 } from "@redux/features/productSlice";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { Button } from "@/components/ui/button";
+import AddProductForm from "../components/AddProduct";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -28,11 +28,7 @@ const ProductDetail = () => {
 
   return (
     <div className="product-detail">
-      <h2 className="text-2xl font-semibold">{product.name}</h2>
-      <p className="text-lg">Price: ${product.price}</p>
-      <p className="mt-4">{product.description}</p>
-      <p className="mt-4">Quantity Available: {product.quantity}</p>
-      <Button variant="outline">Add to Cart</Button>
+      <AddProductForm productToEdit={product} />
     </div>
   );
 };

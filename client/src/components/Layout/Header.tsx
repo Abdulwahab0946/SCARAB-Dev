@@ -10,7 +10,7 @@ import {
 
 const Header: React.FC = () => {
   return (
-    <header className="bg-blue-600  p-4">
+    <header className="bg-primary  p-4 flex flex-col items-center">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
@@ -21,11 +21,9 @@ const Header: React.FC = () => {
             </Link>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link to="/add-product">
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Add Product
-              </NavigationMenuLink>
-            </Link>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              <Link to="/add-product">Add Product</Link>
+            </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>

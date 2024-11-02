@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { addProduct, editProduct } from "../redux/features/productSlice";
 import { Product, type CreateProductDto } from "@/types";
 import { useAppDispatch } from "@redux/hooks";
+import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface AddProductProps {
   productToEdit?: Product;
@@ -9,6 +11,8 @@ interface AddProductProps {
 
 const AddProduct: React.FC<AddProductProps> = ({ productToEdit }) => {
   const dispatch = useAppDispatch();
+
+  const navigate = useNavigate();
 
   const [product, setProduct] = useState<CreateProductDto>({
     name: "",
@@ -37,13 +41,18 @@ const AddProduct: React.FC<AddProductProps> = ({ productToEdit }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (productToEdit) {
-      await dispatch(editProduct({ id: productToEdit.id, product })).unwrap();
-    } else {
-      await dispatch(addProduct(product)).unwrap();
+    try {
+      if (productToEdit) {
+        await dispatch(editProduct({ id: productToEdit.id, product })).unwrap();
+      } else {
+        await dispatch(addProduct(product)).unwrap();
+      }
+      navigate("/");
+    } catch (error) {
+      console.error("Error has occurred : ", error);
+    } finally {
+      setProduct({ name: "", price: 0, description: "", quantity: 0 });
     }
-
-    setProduct({ name: "", price: 0, description: "", quantity: 0 });
   };
 
   return (
@@ -120,12 +129,13 @@ const AddProduct: React.FC<AddProductProps> = ({ productToEdit }) => {
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
           />
         </div>
-        <button
+        <Button
           type="submit"
-          className="w-full bg-blue-500 text-white font-semibold py-2 rounded-md hover:bg-blue-600"
+          variant="default"
+          className="w-full font-semibold py-2 rounded-md "
         >
-          {productToEdit ? "Update Product" : "Add Product"}
-        </button>
+          {productToEdit ? "Update" : "Add"}
+        </Button>
       </form>
     </div>
   );
