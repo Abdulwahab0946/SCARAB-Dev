@@ -23,7 +23,7 @@ export const fetchProducts = createAsyncThunk(
   async () => {
     try {
       const response = await getProducts();
-      return response.data;
+      return response.data.data;
     } catch (error) {
       toast({
         variant: "destructive",
@@ -68,7 +68,7 @@ export const fetchProductById = createAsyncThunk(
   async (id: number) => {
     try {
       const response = await getProductById(id);
-      return response.data;
+      return response.data.data;
     } catch (error) {
       toast({
         variant: "destructive",
@@ -85,14 +85,10 @@ export const fetchProductById = createAsyncThunk(
 // Edit an existing product
 export const editProduct = createAsyncThunk(
   "products/editProduct",
-  async ({
-    id,
-    product,
-  }: {
-    id: number;
-    product: Partial<CreateProductDto>;
-  }) => {
+  async ({ id, product }: { id: number; product: CreateProductDto }) => {
     try {
+      console.log(product);
+      
       const response = await updateProduct(id, product);
       toast({
         variant: "default",

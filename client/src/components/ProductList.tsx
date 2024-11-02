@@ -47,12 +47,8 @@ const ProductListing: React.FC = () => {
       <h2 className="text-2xl font-semibold mb-4">Our Product List</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {products.map((product) => (
-          <Link
-            key={product.id}
-            to={`/product/${product.id}`}
-            className="hover:shadow-lg"
-          >
-            <Card>
+          <Link key={product.id} to={`/product/${product.id}`}>
+            <Card className=" hover:shadow-lg h-full grid grid-cols-1  grid-rows-3 ">
               <CardHeader className=" flex flex-col md:flex-row items-center justify-between ">
                 <CardTitle>{product.name}</CardTitle>
 
@@ -73,12 +69,12 @@ const ProductListing: React.FC = () => {
                   </Button>
                 </div>
               </CardHeader>
-              <CardContent>
-                <CardDescription className=" line-clamp-3">
-                  {product.description}
+              <CardContent className="">
+                <CardDescription>
+                  <p className=" line-clamp-3">{product.description}</p>
                 </CardDescription>
               </CardContent>
-              <CardFooter className="flex flex-row justify-between items-center">
+              <CardFooter className="self-end flex flex-row justify-between items-center">
                 <p>${product.price}</p>
                 <p>Quantity: {product.quantity}</p>
               </CardFooter>
